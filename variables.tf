@@ -95,5 +95,77 @@ EOT
       })))
     })))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        contains(["USER_PROVISIONING", "INBOUND_PROVISIONING"], v.name)
+      )
+    ])
+    error_message = "must be one of: \"USER_PROVISIONING\", \"INBOUND_PROVISIONING\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.status == null || (contains(["DISABLED", "ENABLED"], v.status))
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.create == null || alltrue([for item in item.create : (item.lifecycle_create == null || alltrue([for item in item.lifecycle_create : (item.status == null || (contains(["DISABLED", "ENABLED"], item.status)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.update == null || alltrue([for item in item.update : (item.lifecycle_deactivate == null || alltrue([for item in item.lifecycle_deactivate : (item.status == null || (contains(["DISABLED", "ENABLED"], item.status)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.update == null || alltrue([for item in item.update : (item.password == null || alltrue([for item in item.password : (item.change == null || (contains(["CHANGE", "KEEP_EXISTING"], item.change)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"CHANGE\", \"KEEP_EXISTING\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.update == null || alltrue([for item in item.update : (item.password == null || alltrue([for item in item.password : (item.seed == null || (contains(["OKTA", "RANDOM"], item.seed)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"OKTA\", \"RANDOM\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.update == null || alltrue([for item in item.update : (item.password == null || alltrue([for item in item.password : (item.status == null || (contains(["DISABLED", "ENABLED"], item.status)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.update == null || alltrue([for item in item.update : (item.profile == null || alltrue([for item in item.profile : (item.status == null || (contains(["DISABLED", "ENABLED"], item.status)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.app_features : (
+        v.capabilities == null || alltrue([for item in v.capabilities : (item.import_settings == null || alltrue([for item in item.import_settings : (item.schedule == null || alltrue([for item in item.schedule : (item.status == null || (contains(["DISABLED", "ENABLED"], item.status)))]))]))])
+      )
+    ])
+    error_message = "must be one of: \"DISABLED\", \"ENABLED\""
+  }
 }
 
